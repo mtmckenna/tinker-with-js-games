@@ -4,10 +4,9 @@ const util = require("util");
 
 const { S3 } = aws;
 
-exports.handler = async (event) => {
+exports.handler = async () => {
   const s3 = new S3();
   const s3Path = `z${crypto.randomBytes(16).toString("hex")}`;
-  const redirectUrl = `https://tjsg.mtmckenna.com/${s3Path}`;
   const params = {
     Bucket: "tinker-with-js-games-html-uploads",
     Conditions: [
