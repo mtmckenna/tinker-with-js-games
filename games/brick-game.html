@@ -1,0 +1,156 @@
+<!doctype html>
+<title>Brick Game - Tinkering with JavaScript Games!</title>
+<canvas id="game"></canvas>
+<script>
+
+// Try editing the following lines!
+
+var canvasWidth = 640;
+var canvasHeight = 480;
+var gameTitleText = "Welcome to the MADE!";
+var gameOverText = "Nice try! Avoid the ceiling, floor, and wall!";
+var textColor = "black";
+var backgroundColor = "white";
+var playerSpeed = 5.0;
+var wallSpeed = 7.2;
+
+// The first parameter is the box's color
+// The second parameter is the box's horizontal position
+// The third parameter is the box's vertical position
+// The fourth parameter is the box's width
+// The fifth parameter is the box's height
+var player = new Box("blue", 50, 200, 25, 25);
+var wall = new Box("red", 640, 480, 25, 75);
+
+// Warming!!
+// Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
+// Warning!!
+
+var canvas = document.getElementById("game");
+var context = canvas.getContext("2d");
+var font = "30px Arial, Helvetica, sans-serif";
+var buttonPressed = false;
+var gameOver = false;
+
+window.addEventListener("keydown", onButtonPressed);
+window.addEventListener("touchstart", onButtonPressed);
+window.addEventListener("mousedown", onButtonPressed);
+window.addEventListener("keyup", onButtonReleased);
+window.addEventListener("touchend", onButtonReleased);
+window.addEventListener("mouseup", onButtonReleased);
+
+startGame();
+
+// The gameLoop function is the heart of our game!
+function gameLoop(time) {
+    // This line tells the browser to run the gameLoop over and over again
+    window.requestAnimationFrame(gameLoop);
+
+    // Clear the canvas so we can drawing all over again
+    fillBackground(backgroundColor);
+
+    // If the game is over, display some friendly text
+    if (gameOver == true) {
+        drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
+    drawText(gameTitleText, textColor, canvas.width / 2, 30);
+
+    // If a button is pressed, move the player up
+    if (buttonPressed == true) {
+        player.y = player.y - playerSpeed;
+    } else {
+        player.y = player.y + playerSpeed;
+    }
+
+    // Move the wall left
+    wall.x = wall.x - wallSpeed;
+
+    // If the wall is off the left side of the screen,
+    // move it to the right side of the screen to start over
+    if (wall.x < -wall.width) {
+        wall.x = canvasWidth;
+        wall.y = randomNumberBetween(0, canvasHeight);
+    }
+
+    // If the player has hit a wall, the floor, or the ceiling,
+    // the game is over;
+    if (player.overlaps(wall) == true || player.y < player.height || player.y > canvasHeight) {
+        gameOver = true;
+        wall.x = canvasWidth;
+    }
+
+    // Draw the player and the wall
+    player.draw();
+    wall.draw();
+}
+
+function startGame() {
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    gameLoop();
+}
+
+function onButtonPressed() {
+    if (gameOver == true && buttonPressed == false) {
+        gameOver = false;
+        player.y = canvasHeight / 2;
+    }
+
+    buttonPressed = true;
+}
+
+function onButtonReleased() {
+    buttonPressed = false;
+}
+
+function fillBackground(color) {
+    context.fillStyle = color;
+    context.fillRect(0, 0, canvas.width, canvas.width);
+}
+
+function drawText(text, color, x, y) {
+    context.font = font;
+    context.fillStyle = color;
+    context.textAlign = "center";
+    context.fillText(text, x, y);
+}
+
+function randomNumberBetween(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+// Box is pretty complicated--don't worry too much about it just yet!
+function Box(color, x, y, width, height) {
+    this.color = color;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.draw = function() {
+        context.fillStyle = this.color;
+        context.fillRect(this.x, this.y, this.width, -this.height);
+    };
+    this.overlaps = function(box) {
+        return !(
+            box.x > (this.x + this.width) ||
+            (box.x + box.width) < this.x ||
+            (box.y - box.height) > this.y ||
+            box.y < (this.y - this.height)
+            );
+    };
+}
+</script>
+
+<style>
+html {
+    background-color: lavender;
+}
+
+canvas {
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+}
+</style>
