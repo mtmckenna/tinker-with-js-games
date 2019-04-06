@@ -2,7 +2,6 @@
 <title>Brick Game - Tinker with JavaScript Games!</title>
 <canvas id="game"></canvas>
 <script>
-
 // Try editing the following lines!
 var canvasWidth = 640;
 var canvasHeight = 480;
@@ -19,12 +18,11 @@ var wallSpeed = 3;
 // The fourth parameter is the box's width
 // The fifth parameter is the box's height
 var player = new Box("blue", 50, 200, 25, 25);
-var wall = new Box("red", 640, 480, 25, 75);
+var wall = new Box("red", 640, 200, 25, 75);
 
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
 // Warning!!
-
 var canvas = document.getElementById("game");
 var context = canvas.getContext("2d");
 var font = "30px Arial, Helvetica, sans-serif";
@@ -75,7 +73,7 @@ function gameLoop(time) {
 
     // If the player has hit a wall, the floor, or the ceiling,
     // the game is over;
-    if (player.overlaps(wall) == true || player.y < player.height || player.y > canvasHeight) {
+    if (player.overlaps(wall) == true || player.y < 0 || (player.y + player.height) > canvasHeight) {
         gameOver = true;
         wall.x = canvasWidth;
     }
@@ -129,15 +127,15 @@ function Box(color, x, y, width, height) {
     this.height = height;
     this.draw = function() {
         context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, -this.height);
+        context.fillRect(this.x, this.y, this.width, this.height);
     };
     this.overlaps = function(box) {
-        return !(
-            box.x > (this.x + this.width) ||
-            (box.x + box.width) < this.x ||
-            (box.y - box.height) > this.y ||
-            box.y < (this.y - this.height)
-            );
+        return (
+            (this.x + this.width) > box.x &&
+            this.x < (box.x + box.width) &&
+            (this.y + this.height) > box.y &&
+            this.y < (box.y + box.height)
+        );
     };
 }
 </script>
