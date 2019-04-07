@@ -48,9 +48,9 @@ function gameLoop(time) {
 
   // If a button is pressed, move the player up
   if (buttonPressed == true) {
-      player.y = player.y - playerSpeed
+    player.y = player.y - playerSpeed
   } else {
-      player.y = player.y + playerSpeed
+    player.y = player.y + playerSpeed
   }
 
   // Move the wall left
@@ -93,64 +93,64 @@ function startGame() {
 }
 
 function onButtonPressed() {
-    if (gameOver == true && buttonPressed == false) {
-        gameOver = false
-        player.y = canvasHeight / 2
-    }
+  if (gameOver == true && buttonPressed == false) {
+    gameOver = false
+    player.y = canvasHeight / 2
+  }
 
-    buttonPressed = true
+  buttonPressed = true
 }
 
 function onButtonReleased() {
-    buttonPressed = false
+  buttonPressed = false
 }
 
 function fillBackground(color) {
-    context.fillStyle = color
-    context.fillRect(0, 0, canvas.width, canvas.height)
+  context.fillStyle = color
+  context.fillRect(0, 0, canvas.width, canvas.height)
 }
 
 function drawText(text, color, x, y) {
-    context.font = font
-    context.fillStyle = color
-    context.textAlign = "center"
-    context.fillText(text, x, y)
+  context.font = font
+  context.fillStyle = color
+  context.textAlign = "center"
+  context.fillText(text, x, y)
 }
 
 function randomNumberBetween(min, max) {
-    return Math.random() * (max - min) + min
+  return Math.random() * (max - min) + min
 }
 
 // Box is pretty complicated--don't worry too much about it just yet!
 function Box(color, x, y, width, height) {
-    this.color = color
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
-    this.draw = function() {
-        context.fillStyle = this.color
-        context.fillRect(this.x, this.y, this.width, this.height)
-    }
-    this.overlaps = function(box) {
-        return (
-            (this.x + this.width) > box.x &&
-            this.x < (box.x + box.width) &&
-            (this.y + this.height) > box.y &&
-            this.y < (box.y + box.height)
-        )
-    }
+  this.color = color
+  this.x = x
+  this.y = y
+  this.width = width
+  this.height = height
+  this.draw = function() {
+    context.fillStyle = this.color
+    context.fillRect(this.x, this.y, this.width, this.height)
+  }
+  this.overlaps = function(box) {
+    return (
+      (this.x + this.width) > box.x &&
+      this.x < (box.x + box.width) &&
+      (this.y + this.height) > box.y &&
+      this.y < (box.y + box.height)
+    )
+  }
 }
 </script>
 
 <style>
 html {
-    background-color: lavender;
+  background-color: lavender;
 }
 
 canvas {
-    display: block;
-    margin: auto;
-    border: 1px solid black;
+  display: block;
+  margin: auto;
+  border: 1px solid black;
 }
 </style>
