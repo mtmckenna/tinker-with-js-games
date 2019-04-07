@@ -48,6 +48,7 @@ function gameLoop(time) {
 
     // If the game is over, display some friendly text
     if (gameOver == true) {
+        wall.x = canvasWidth;
         drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2);
         return;
     }
@@ -75,10 +76,6 @@ function gameLoop(time) {
     // the game is over;
     if (player.overlaps(wall) == true || player.y < 0 || (player.y + player.height) > canvasHeight) {
         gameOver = true;
-    }
-
-    if (gameOver == true) {
-      wall.x = canvasWidth;
     }
 
     // Draw the player and the wall
