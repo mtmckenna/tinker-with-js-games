@@ -75,7 +75,10 @@ function gameLoop(time) {
     // the game is over;
     if (player.overlaps(wall) == true || player.y < 0 || (player.y + player.height) > canvasHeight) {
         gameOver = true;
-        wall.x = canvasWidth;
+    }
+
+    if (gameOver == true) {
+      wall.x = canvasWidth;
     }
 
     // Draw the player and the wall
