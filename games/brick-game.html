@@ -129,9 +129,21 @@ function makeBox(color, x, y, width, height) {
     y, y,
     width: width,
     height: height,
+    image: null,
     draw: function () {
-      context.fillStyle = this.color
-      context.fillRect(this.x, this.y, this.width, this.height)
+      if (this.image) {
+        context.drawImage(this.image, this.x, this.y, this.width, this.height)
+      } else {
+        context.fillStyle = this.color
+        context.fillRect(this.x, this.y, this.width, this.height)
+      }
+    },
+    hideImage: function () {
+      this.image = null
+    },
+    showImage: function (imageURL) {
+      this.image = new Image()
+      this.image.src = imageURL
     },
     overlaps: function (box) {
       return (
