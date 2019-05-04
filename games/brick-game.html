@@ -17,8 +17,9 @@ var wallSpeed = 3
 // The third parameter is the box's vertical position
 // The fourth parameter is the box's width
 // The fifth parameter is the box's height
-var player = makeBox("blue", 50, 200, 25, 25)
-var wall = makeBox("red", 615, 200, 25, 75)
+// The sixth parameter is the box's speed
+var player = makeBox("blue", 50, 200, 25, 25, 2)
+var wall = makeBox("red", 615, 200, 25, 75, 3)
 
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
@@ -48,42 +49,48 @@ function gameLoop(time) {
 
   // If a button is pressed, move the player up
   if (buttonPressed == true) {
-    player.y = player.y - playerSpeed
+    player.y = player.y - player.speed
   } else {
-    player.y = player.y + playerSpeed
+    player.y = player.y + player.speed
   }
 
-  // Move the wall left
-  wall.x = wall.x - wallSpeed
+    // Move the wall left
+    wall.x = wall.x - wall.speed
 
-  // If the wall is off the left side of the screen,
-  // move it to the right side of the screen to start over
-  if (wall.x < -wall.width) {
-    wall.x = canvasWidth
-    wall.y = randomNumberBetween(0, canvasHeight)
-  }
+    // If the wall is off the left side of the screen,
+    // move it to the right side of the screen to start over
+    if (wall.x < -wall.width) {
+      wall.x = canvasWidth
+      wall.y = randomNumberBetween(0, canvasHeight)
+    }
 
-  // If the player has hit a wall, the floor, or the ceiling,
-  // the game is over
-  if (player.overlaps(wall) == true || player.y < 0 || (player.y + player.height) > canvasHeight) {
-    gameOver = true
-  }
+    // If the player has hit a wall
+    if (player.overlaps(wall) == true) {
+      gameOver = true
+    }
 
-  // Decide what to do if the game is over
-  if (gameOver == true) {
-    // Reset the wall to its starting position
-    wall.x = canvasWidth
+    if (gameOver == true) {
+      // Reset the wall to its starting position if game is over
+      wall.x = canvasWidth
+    } else {
+      // Draw the wall
+      wall.draw()
+    }
 
-    // Draw the game over text
-    drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
-  } else {
-    // Draw the title
-    drawText(gameTitleText, textColor, canvas.width / 2, 30)
+    // Game over if the player hits the top or the bottom
+    if ( player.y < 0 || (player.y + player.height) > canvasHeight) {
+      gameOver = true
+    }
 
-    // Draw the player and the wall
-    player.draw()
-    wall.draw()
-  }
+    if (gameOver == true) {
+      // Draw the game over text
+      drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
+    } else {
+      // Draw the title
+      drawText(gameTitleText, textColor, canvas.width / 2, 30)
+      // Draw the player
+      player.draw()
+    }
 }
 
 function startGame() {
@@ -122,13 +129,14 @@ function randomNumberBetween(min, max) {
 }
 
 // Box is pretty complicated--don't worry too much about it just yet!
-function makeBox(color, x, y, width, height) {
+function makeBox(color, x, y, width, height, speed) {
   return {
     color: color,
     x: x,
     y, y,
     width: width,
     height: height,
+    speed: speed,
     image: null,
     draw: function () {
       if (this.image) {
