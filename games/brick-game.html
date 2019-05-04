@@ -59,7 +59,7 @@ function gameLoop(time) {
   // move it to the right side of the screen to start over
   if (wall.x < -wall.width) {
     wall.x = canvasWidth
-    wall.y = randomNumberBetween(0, canvasHeight)
+    wall.y = getRandomNumberBetween(0, canvasHeight)
   }
 
   // If the player has hit a wall
@@ -122,7 +122,7 @@ function drawText(text, color, x, y) {
   context.fillText(text, x, y)
 }
 
-function randomNumberBetween(min, max) {
+function getRandomNumberBetween(min, max) {
   return Math.random() * (max - min) + min
 }
 
