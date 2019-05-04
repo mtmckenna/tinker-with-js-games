@@ -11,6 +11,7 @@ var textColor = "black"
 var backgroundColor = "white"
 var playerSpeed = 2
 var wallSpeed = 3
+var score = 0
 
 // The first parameter is the box's color
 // The second parameter is the box's horizontal position
@@ -19,7 +20,18 @@ var wallSpeed = 3
 // The fifth parameter is the box's height
 // The sixth parameter is the box's speed
 var player = makeBox("blue", 50, 200, 25, 25, 2)
-var wall = makeBox("red", 615, 200, 25, 75, 3)
+player.showImage("https://i.imgur.com/4RO3eoY.png")
+var wall1 = makeBox("red", 615, 200, 25, 75, 3)
+var wall2 = makeBox("deeppink", 615, 100, 20, 20, 4)
+var walls = [wall1, wall2]
+
+for (var i = 0; i < 10; i = i +1) {
+  var color = getRandomColor()
+  var y = getRandomNumberBetween(0, canvasHeight)
+  var speed = getRandomNumberBetween(1, 4)
+  var wall = makeBox(getRandomColor(), 615, y, 15, 50, speed)
+  walls[i] = wall
+}
 
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
@@ -54,14 +66,18 @@ function gameLoop(time) {
     player.y = player.y + player.speed
   }
 
+  for (var i = 0; i < walls.length; i++) {
+    var wall = walls[i]
+
     // Move the wall left
     wall.x = wall.x - wall.speed
 
     // If the wall is off the left side of the screen,
     // move it to the right side of the screen to start over
     if (wall.x < -wall.width) {
+      score++;
       wall.x = canvasWidth
-      wall.y = randomNumberBetween(0, canvasHeight)
+      wall.y = getRandomNumberBetween(0, canvasHeight)
     }
 
     // If the player has hit a wall
@@ -76,21 +92,25 @@ function gameLoop(time) {
       // Draw the wall
       wall.draw()
     }
+  }
 
-    // Game over if the player hits the top or the bottom
-    if ( player.y < 0 || (player.y + player.height) > canvasHeight) {
-      gameOver = true
-    }
+  // Game over if the player hits the top or the bottom
+  if ( player.y < 0 || (player.y + player.height) > canvasHeight) {
+    gameOver = true
+  }
 
-    if (gameOver == true) {
-      // Draw the game over text
-      drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
-    } else {
-      // Draw the title
-      drawText(gameTitleText, textColor, canvas.width / 2, 30)
-      // Draw the player
-      player.draw()
-    }
+  if (gameOver == true) {
+    // Draw the game over text
+    drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
+    score = 0
+  } else {
+    // Draw the title
+    drawText(gameTitleText, textColor, canvas.width / 2, 30)
+    // Draw the player
+    player.draw()
+    // Draw the score
+    drawText(score, "deeppink", canvas.width / 2, 75)
+  }
 }
 
 function startGame() {
@@ -124,7 +144,7 @@ function drawText(text, color, x, y) {
   context.fillText(text, x, y)
 }
 
-function randomNumberBetween(min, max) {
+function getRandomNumberBetween(min, max) {
   return Math.random() * (max - min) + min
 }
 
