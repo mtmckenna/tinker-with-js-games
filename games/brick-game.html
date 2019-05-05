@@ -9,9 +9,6 @@ var gameTitleText = "Welcome to the MADE!"
 var gameOverText = "Nice try! Avoid the ceiling, floor, and wall!"
 var textColor = "black"
 var backgroundColor = "white"
-var playerSpeed = 2
-var wallSpeed = 3
-var score = 0
 
 // The first parameter is the box's color
 // The second parameter is the box's horizontal position
@@ -75,7 +72,6 @@ function gameLoop(time) {
     // If the wall is off the left side of the screen,
     // move it to the right side of the screen to start over
     if (wall.x < -wall.width) {
-      score++;
       wall.x = canvasWidth
       wall.y = getRandomNumberBetween(0, canvasHeight)
     }
@@ -102,14 +98,11 @@ function gameLoop(time) {
   if (gameOver == true) {
     // Draw the game over text
     drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
-    score = 0
   } else {
     // Draw the title
     drawText(gameTitleText, textColor, canvas.width / 2, 30)
     // Draw the player
     player.draw()
-    // Draw the score
-    drawText(score, "deeppink", canvas.width / 2, 75)
   }
 }
 
