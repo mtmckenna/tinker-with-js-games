@@ -19,6 +19,11 @@ var backgroundColor = "white"
 var player = makeBox("blue", 50, 200, 25, 25, 2)
 var wall = makeBox("red", 615, 200, 25, 75, 3)
 
+var shots = []
+for (var i = 0; i < 3; i++) {
+  shots[i] = makeBox("orange", )
+}
+
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
 // Warning!!
@@ -26,6 +31,7 @@ var canvas = document.getElementById("game")
 var context = canvas.getContext("2d")
 var font = "30px Arial, Helvetica, sans-serif"
 var buttonPressed = false
+var shootPressed = false
 var gameOver = false
 
 window.addEventListener("keydown", onButtonPressed)
@@ -97,10 +103,14 @@ function startGame() {
   gameLoop()
 }
 
-function onButtonPressed() {
+function onButtonPressed(event) {
   if (gameOver == true && buttonPressed == false) {
     gameOver = false
     player.y = canvasHeight / 2
+  }
+
+  if (event.key == " ") {
+    shootPressed = true
   }
 
   buttonPressed = true
@@ -108,6 +118,10 @@ function onButtonPressed() {
 
 function onButtonReleased() {
   buttonPressed = false
+
+  if (event.key == " ") {
+    shootPressed = false
+  }
 }
 
 function fillBackground(color) {
