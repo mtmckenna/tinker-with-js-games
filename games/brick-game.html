@@ -9,6 +9,7 @@ var gameTitleText = "Welcome to the MADE!"
 var gameOverText = "Nice try! Avoid the ceiling, floor, and wall!"
 var textColor = "black"
 var backgroundColor = "white"
+var score = 0
 
 // The first parameter is the box's color
 // The second parameter is the box's horizontal position
@@ -80,6 +81,7 @@ function gameLoop(time) {
   // If the player has hit a cherry
   if (player.overlaps(cherry) == true) {
     cherry.hide()
+    score = score + 1
   }
 
   if (gameOver == true) {
@@ -100,9 +102,11 @@ function gameLoop(time) {
   if (gameOver == true) {
     // Draw the game over text
     drawText(gameOverText, textColor, canvas.width / 2, canvas.height / 2)
+    score = 0
   } else {
-    // Draw the title
+    // Draw the title and score
     drawText(gameTitleText, textColor, canvas.width / 2, 30)
+    drawText(score, textColor, canvas.width / 2, 60)
     // Draw the player
     player.draw()
   }
@@ -180,7 +184,7 @@ function makeBox(color, x, y, width, height, speed) {
       this.image.src = imageURL
     },
     overlaps: function (box) {
-      if (this.hidden) {
+      if (box.hidden) {
         return false
       }
 
