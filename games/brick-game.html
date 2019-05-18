@@ -21,7 +21,15 @@ var initialPlayerSpeed = 2
 // The sixth parameter is the box's speed
 var player = makeBox("blue", 50, 200, 25, initialPlayerHeight, initialPlayerSpeed)
 var wall = makeBox("red", 615, 200, 25, 75, 3)
-var cherry = makeBox("deeppink", 615, 100, 25, 25, 5)
+// var cherry = makeBox("deeppink", 615, 100, 25, 25, 5)
+
+var cherries = []
+
+for (var i = 0; i < 20; i = i + 1) {
+  var cherrySpeed = getRandomNumberBetween(2, 5);
+  var cherry = makeBox("deeppink", 615, getRandomNumberBetween(0, canvasHeight), 25, 25, cherrySpeed)
+  cherries.push(cherry)
+}
 
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
@@ -56,9 +64,8 @@ function gameLoop(time) {
     player.y = player.y + player.speed
   }
 
-  // Move the wall and cherry left
+  // Move the wall
   wall.x = wall.x - wall.speed
-  cherry.x = cherry.x - cherry.speed
 
   // If the wall is off the left side of the screen,
   // move it to the right side of the screen to start over
@@ -67,37 +74,48 @@ function gameLoop(time) {
     wall.y = getRandomNumberBetween(0, canvasHeight)
   }
 
-  // If the cherry is off the left side of the screen,
-  // move it to the right side of the screen to start over
-  if (cherry.x < -cherry.width) {
-    cherry.x = canvasWidth
-    cherry.y = getRandomNumberBetween(0, canvasHeight)
-    cherry.show()
-  }
-
-  // If the player has hit a wall
-  if (player.overlaps(wall) == true) {
-    gameOver = true
-  }
-
-  // If the player has hit a cherry
-  if (player.overlaps(cherry) == true) {
-    cherry.hide()
-    score = score + 1
-    player.height = player.height + 10
-    // player.speed = player.speed + 1
-  }
-
   if (gameOver == true) {
     // Reset the wall and cherry to their starting positions if game is over
     wall.x = canvasWidth
-    cherry.x = canvasWidth
     player.height = initialPlayerHeight
     player.speed = initialPlayerSpeed
   } else {
     // Draw the wall and cherry
     wall.draw()
-    cherry.draw()
+  }
+
+  for (var i = 0; i < cherries.length; i = i + 1) {
+    var cherry = cherries[i];
+    cherry.x = cherry.x - cherry.speed
+
+    // If the cherry is off the left side of the screen,
+    // move it to the right side of the screen to start over
+    if (cherry.x < -cherry.width) {
+      cherry.x = canvasWidth
+      cherry.y = getRandomNumberBetween(0, canvasHeight)
+      cherry.show()
+    }
+
+    // If the player has hit a wall
+    if (player.overlaps(wall) == true) {
+      gameOver = true
+    }
+
+    // If the player has hit a cherry
+    if (player.overlaps(cherry) == true) {
+      cherry.hide()
+      score = score + 1
+      player.height = player.height + 10
+      // player.speed = player.speed + 1
+    }
+
+    if (gameOver == true) {
+      // Reset the cherry to their starting positions if game is over
+      cherry.x = canvasWidth
+    } else {
+      // Draw the cherry
+      cherry.draw()
+    }
   }
 
   // Game over if the player hits the top or the bottom
