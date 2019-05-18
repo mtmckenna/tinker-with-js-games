@@ -94,6 +94,11 @@ function gameLoop(time) {
       wall.y = getRandomNumberBetween(0, canvasHeight)
     }
 
+        // If the player has hit a wall
+    if (player.overlaps(wall) == true) {
+      gameOver = true
+    }
+
     if (gameOver == true) {
       // Reset the wall and cherry to their starting positions if game is over
       wall.x = canvasWidth
@@ -115,11 +120,6 @@ function gameLoop(time) {
       cherry.x = canvasWidth
       cherry.y = getRandomNumberBetween(0, canvasHeight)
       cherry.show()
-    }
-
-    // If the player has hit a wall
-    if (player.overlaps(wall) == true) {
-      gameOver = true
     }
 
     // If the player has hit a cherry
