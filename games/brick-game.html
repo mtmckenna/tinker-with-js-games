@@ -27,6 +27,8 @@ var context = canvas.getContext("2d")
 var font = "30px Arial, Helvetica, sans-serif"
 var buttonPressed = false
 var gameOver = false
+var shake = shake = { amplitude: 0, dir: { x: 1, y: 1 }, pos: { x: 0, y: 0 } }
+var initialShakeAmplitude = 20
 
 window.addEventListener("keydown", onButtonPressed)
 window.addEventListener("touchstart", onButtonPressed)
@@ -172,6 +174,34 @@ function getRandomColor() {
   }
 
   return color
+}
+
+// Will move the screen and prepare it to shake
+function shakeScreen() {
+  shake.amplitude = initialShakeAmplitude;
+  shake.dir.x = oneOrMinusOne()
+  shake.dir.y = oneOrMinusOne()
+}
+
+// Will slowly bring the screen back to the middle
+function updateShakeScreen(timestamp) {
+  game.style.transform = `translateX(${shake.pos.x}px) translateY(${shake.pos.y}px)`
+
+  shake.amplitude = shake.amplitude * 0.9
+
+  // Cut off the shaking when the amplitude is low enough
+  if (Math.abs(shake.amplitude) <= .01) {
+      shake.pos.x = 0
+      shake.pos.y = 0
+    } else {
+      shake.pos.x = Math.sin(timestamp / 50) * shake.amplitude * shake.dir.x
+      shake.pos.y = Math.sin(timestamp / 50) * shake.amplitude * shake.dir.y
+    }
+}
+
+// Randomly returns either 1 or -1
+function oneOrMinusOne() {
+  return Math.round(Math.random()) * 2 - 1;
 }
 
 </script>
