@@ -1,6 +1,6 @@
 <!doctype html>
 <title>Brick Game - Tinker with JavaScript Games!</title>
-<canvas id="game"></canvas>
+<body><canvas id="game"></canvas></body>
 <script>
 // Try editing the following lines!
 var canvasWidth = 640
@@ -40,6 +40,8 @@ var context = canvas.getContext("2d")
 var font = "30px Arial, Helvetica, sans-serif"
 var buttonPressed = false
 var gameOver = false
+var shake = shake = { amplitude: 0, dir: { x: 1, y: 1 }, pos: { x: 0, y: 0 } }
+var initialShakeAmplitude = 20;
 
 window.addEventListener("keydown", onButtonPressed)
 window.addEventListener("touchstart", onButtonPressed)
@@ -105,6 +107,7 @@ function gameLoop(time) {
     // If the player has hit a cherry
     if (player.overlaps(cherry) == true) {
       cherry.hide()
+      shakeScreen()
       score = score + 1
       player.height = player.height + 10
       // player.speed = player.speed + 1
@@ -135,6 +138,8 @@ function gameLoop(time) {
     // Draw the player
     player.draw()
   }
+
+  updateShakeScreen(time)
 }
 
 function startGame() {
@@ -233,6 +238,30 @@ function getRandomColor() {
   }
 
   return color
+}
+
+function shakeScreen() {
+  shake.amplitude = initialShakeAmplitude;
+  shake.dir.x = oneOrMinusOne()
+  shake.dir.y = oneOrMinusOne()
+}
+
+function updateShakeScreen(timestamp) {
+  game.style.transform = `translateX(${shake.pos.x}px) translateY(${shake.pos.y}px)`
+
+  shake.amplitude = shake.amplitude * 0.9
+
+  if (Math.abs(shake.amplitude) <= .01) {
+      shake.pos.x = 0
+      shake.pos.y = 0
+    } else {
+      shake.pos.x = Math.sin(timestamp / 50) * shake.amplitude * shake.dir.x
+      shake.pos.y = Math.sin(timestamp / 50) * shake.amplitude * shake.dir.y
+    }
+}
+
+function oneOrMinusOne() {
+  return Math.round(Math.random()) * 2 - 1;
 }
 
 </script>
