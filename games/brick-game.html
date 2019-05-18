@@ -28,6 +28,7 @@ var cherries = []
 for (var i = 0; i < 20; i = i + 1) {
   var cherrySpeed = getRandomNumberBetween(2, 5);
   var cherry = makeBox("deeppink", 615, getRandomNumberBetween(0, canvasHeight), 25, 25, cherrySpeed)
+  cherry.showImage("https://cdn.iconscout.com/icon/premium/png-256-thumb/cherry-44-137934.png")
   cherries.push(cherry)
 }
 
