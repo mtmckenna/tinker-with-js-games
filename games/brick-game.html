@@ -138,7 +138,18 @@ function makeBox(color, x, y, width, height, speed) {
     height: height,
     speed: speed,
     image: null,
+    hidden: false,
+    hide: function () {
+      this.hidden = true
+    },
+    show: function () {
+      this.hidden = false
+    },
     draw: function () {
+      if (this.hidden) {
+        return
+      }
+
       if (this.image) {
         context.drawImage(this.image, this.x, this.y, this.width, this.height)
       } else {
@@ -154,6 +165,10 @@ function makeBox(color, x, y, width, height, speed) {
       this.image.src = imageURL
     },
     overlaps: function (box) {
+      if (box.hidden) {
+        return false
+      }
+
       return (
         (this.x + this.width) > box.x &&
         this.x < (box.x + box.width) &&
