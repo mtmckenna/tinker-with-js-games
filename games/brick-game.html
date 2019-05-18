@@ -18,6 +18,7 @@ var backgroundColor = "white"
 // The sixth parameter is the box's speed
 var player = makeBox("blue", 50, 200, 25, 25, 2)
 var wall = makeBox("red", 615, 200, 25, 75, 3)
+var cherry = makeBox("deeppink", 615, 100, 25, 25, 5)
 
 // Warning!!
 // Warning!! This is more advanced stuff--don't worry if it's super confusing right now!
@@ -52,8 +53,9 @@ function gameLoop(time) {
     player.y = player.y + player.speed
   }
 
-  // Move the wall left
+  // Move the wall and cherry left
   wall.x = wall.x - wall.speed
+  cherry.x = cherry.x - cherry.speed
 
   // If the wall is off the left side of the screen,
   // move it to the right side of the screen to start over
@@ -62,17 +64,32 @@ function gameLoop(time) {
     wall.y = getRandomNumberBetween(0, canvasHeight)
   }
 
+  // If the cherry is off the left side of the screen,
+  // move it to the right side of the screen to start over
+  if (cherry.x < -cherry.width) {
+    cherry.x = canvasWidth
+    cherry.y = getRandomNumberBetween(0, canvasHeight)
+    cherry.show()
+  }
+
   // If the player has hit a wall
   if (player.overlaps(wall) == true) {
     gameOver = true
   }
 
+  // If the player has hit a cherry
+  if (player.overlaps(cherry) == true) {
+    cherry.hide()
+  }
+
   if (gameOver == true) {
-    // Reset the wall to its starting position if game is over
+    // Reset the wall and cherry to their starting positions if game is over
     wall.x = canvasWidth
+    cherry.x = canvasWidth
   } else {
-    // Draw the wall
+    // Draw the wall and cherry
     wall.draw()
+    cherry.draw()
   }
 
   // Game over if the player hits the top or the bottom
@@ -136,7 +153,18 @@ function makeBox(color, x, y, width, height, speed) {
     height: height,
     speed: speed,
     image: null,
+    hidden: false,
+    hide: function () {
+      this.hidden = true
+    },
+    show: function () {
+      this.hidden = false
+    },
     draw: function () {
+      if (this.hidden) {
+        return
+      }
+
       if (this.image) {
         context.drawImage(this.image, this.x, this.y, this.width, this.height)
       } else {
@@ -152,6 +180,10 @@ function makeBox(color, x, y, width, height, speed) {
       this.image.src = imageURL
     },
     overlaps: function (box) {
+      if (this.hidden) {
+        return false
+      }
+
       return (
         (this.x + this.width) > box.x &&
         this.x < (box.x + box.width) &&
