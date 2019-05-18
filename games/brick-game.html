@@ -3,14 +3,16 @@
 <canvas id="game"></canvas>
 <script>
 // Try editing the following lines!
-var canvasWidth = 640
-var canvasHeight = 480
-var gameTitleText = "Welcome to the MADE!"
-var gameOverText = "Nice try! Avoid the ceiling, floor, and wall!"
-var textColor = "black"
+var canvasWidth = 1000
+var canvasHeight = 700
+var gameTitleText = "Avoid the walls and get the stars!"
+var gameOverText = "Nice try! Avoid the ceiling, floor, and walls!"
+var textColor = "white"
 var backgroundColor = "white"
+var backgroundBox = makeBox("white", 0, 0, canvasWidth, canvasHeight)
+backgroundBox.showImage("https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
 var score = 0
-var initialPlayerHeight = 25
+var initialPlayerHeight = 50
 var initialPlayerSpeed = 2
 
 // The first parameter is the box's color
@@ -19,17 +21,28 @@ var initialPlayerSpeed = 2
 // The fourth parameter is the box's width
 // The fifth parameter is the box's height
 // The sixth parameter is the box's speed
-var player = makeBox("blue", 50, 200, 25, initialPlayerHeight, initialPlayerSpeed)
-var wall = makeBox("red", 615, 200, 25, 75, 3)
+var player = makeBox("blue", 50, 200, 50, initialPlayerHeight, initialPlayerSpeed)
+player.showImage("https://i.imgur.com/4RO3eoY.png")
+// var wall = makeBox("red", 615, 200, 25, 75, 3)
 // var cherry = makeBox("deeppink", 615, 100, 25, 25, 5)
 
 var cherries = []
 
-for (var i = 0; i < 20; i = i + 1) {
+for (var i = 0; i < 10; i = i + 1) {
   var cherrySpeed = getRandomNumberBetween(2, 5);
-  var cherry = makeBox("deeppink", 615, getRandomNumberBetween(0, canvasHeight), 25, 25, cherrySpeed)
-  cherry.showImage("https://cdn.iconscout.com/icon/premium/png-256-thumb/cherry-44-137934.png")
+  var cherry = makeBox("deeppink", getRandomNumberBetween(0, canvasWidth), getRandomNumberBetween(0, canvasHeight), 25, 25, cherrySpeed)
+  // cherry.showImage("https://cdn.iconscout.com/icon/premium/png-256-thumb/cherry-44-137934.png")
+  // cherry.showImage("http://www.videogamesprites.net/FinalFantasy6/Objects/Magicite.gif")
+  cherry.showImage("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOMAAADeCAMAAAD4tEcNAAABQVBMVEX39zX///8AAADu7u7t7e1SUlLUrgH+6oezkwD39/f19fX5+fny8vL8/PxVVVU6cJxCQkJOTk7SqQD//zfUrwEQEBD581H18jPctQFBQUFJSUm0tLQ0bZ3t5CslJSVBQVSggwIcHBzn1SWQkJDexBltkIvi4uK6mQDt7TekpKTbvRWvjAB3d3c0NDQtLS0yKQJsbGxYVhLU1NQ9MQL+6X00NAv/84yMcwFVRwJSf5WZmZm6uih2YQGdhjVLTVQiHACDc0B8ek378GIhZKGwrkZmUwPf3S/Gxsbo7ESDbAHJthm5nQuKpL5FOQFmZmY2MR5YUC52dBgAABFDdZqrmhcjHgt8m4WLp3/v3SclKjEDEB40LhIXHSYADSiIdAZyYCNvcU89PFWUq7iwpBw2MyZPRxjWzCZFQCgRDgD/+mZQVCLvBSGUAAARCElEQVR4nO2di3/btBbH69kN8aukTbolzdp1bWn6SLJSYB2l7Rj37uZuXAaMAd0oG8/x+P//gGvpHDmWLFt+Jk7o+fD5cObaPvrGtvSzLB0taMR0zwzqOcRzJZ5NPMv3TOKZxLPJwRb1DM9ziOeOPX23sUitcYM3tnlXTx3OiA5HPJ2SjL2Fa8ZrxiRBK8NoEANa4kEo3oOgvmcSD4ISz/I9DMU8zVAy4o9bSDjq6QLTwvgS6vGX0OA8EyIHf1ND9ps6mtOJZexY8nsnYTjZxdSEi5mckaPV/aBxjyL1LGBc6giMnaUgY8wNGxUuMvAEGY1dYvpuZ41a4wPeGrC54+1BzJhJxkGDWIddv8dt3h6z69mh+w1KZBw/mqkqHgwa9/yvwQO37DPWguYzLsNua3nDBes5vuIZtx2wkX82Ap5/MXW/MtfF9lEPPormcirGZTtfONELMBXQPnK13fi+SctoZgknrcvHt6lRFOP4h50Io14hnVM1xqJ1juY4jg2FX2KMDwTGB4xxCZ9H7xgtWziVzvHO7HjPuut6vx/xPFf0vCiu95syzySe6XsW8eyx54w8O/Zs0KHWOHtM7fXWDmevYfMZ7NUZkEPIoY4QzuLDmUI44jnEcznPoZ5GvYztoxHdPlpHXuvuNXhreJ3uYXu401wIWnMHt9/D/egxa40jSyYiK6YBrD7epD4j3Jw7C7zt4D3LGPGW7csYq6ZzKsgoVDfUE6qbdMLDycnoFK9zXGLkyXRknk08i/dM4pm+R+pDxxp7Wk5GzZIENvnAliSwtPwa8cT2MekNa/o1QUh45GVMGQ5vU2MyOkejP7bHuEQNy/6wvUItxAib2w8ZI7XFvmY6rKWsns453qfWXRwOiL08A3t9uUXtUmBcx81PcL+X9KjhYhdOc1w0YyE6Zx9ehpdX8cL0enVinzcX4qz5Od2r3sOjVpfh1XlfFS6lzklc3cQ9/+YpvDAu3cXSQtmTMtbxqLvwXK6dmvJwsnrOia94cusc/75xCmZ0FH1W09AAZTJWRedUmLEwnVM4Y7k6J2l1w1U82n6hjPuaXFZFC6zIKiilzjFihIfIWINGvqVgbMFutRCjIlykzjFK1DkiY4tarR2LuLDQqtHdWjLGyumcECMKUiUjtdIZi9E5xTMWqXNsz9yxZzHPFjyTeKbE855wW6xX8zGe2jHhoJ7DwHLPGXti+yi7YZN9mwu1HTkZVTon+oadoAYokLE6OgffG18JbYeKEXZbwaNewUmWp6FzLL7iCQsPa/vGKrHnm/VDagsLt6gpGG/hXnBQffM5PcuNbUulcyxJdSPXOVChEIv34FmP8bRtvBKboFsOFWyiHcJhm3iWbS0+HHqKUlMvkc4xwhWPRHgUzZhN5xi+zvG8wnVOCYyV0zkVZzQM/141uDt09u7VoCZn92r845rgqQedY5luwYyumbgIiopHpXMklzAkPLx3R69ad/rFMjqkxfBOrdY54gfzXBpAlzXK9mgI3xk3sHQ9eKdaScm4Qg9rsz7IjQY963BkV0Dn2CPUcEOfkYqz1Iwg6RjjEDVdEYy5dU6xjDUJY26dY3pmm8xiPDvoBf7klszoRgVO7C0IlzD9O7LbLZWx6/Lhsrwjjx9FTfIoJtAAk2Gcrs4JM9YqyTjup0uvc9zuAEZp/vEFtQ+eHoClZMSjnn4Ap/kDTjpg92oWncP6Hs285nbxlz/pUavvxXeoKmyvDqd5gmfturlLKNc5sZdQEB42Y3yC+mY9D+LCOuodn9FOoXOMsnTOBBinrnOqz5hA5whNo6hzSmeM0zny+RYSnUMto4gY1zklMbpCYFupvMYe/CvJtwDLH0xC+53pNtf3tJIZNT4c9Wy43UjHOH8JM+ucUdez0Yj8jw5OoTb22Hsjth29nIx4lhM8a18Mhx6UpzviH8XMOmcbZ2jciLfNNn0DXMnJiO+Rm4poODtkOzFjQOfoekjnbOPgsNX4qJuoU/MywnukgnEVh575jHFjydR9sBVnVHfqBNtHQ65zrEozWnKdY6TTAJVnLEDnpGVUfcSZCiNrGnXWDNL7m3rkrna38aPb8/iwJ/gxbi8nIwzzOIkP9hw/4W275KmjZaV9rvCsOQ7HGHhIje3T01Ov9TntE9smRr21IbWXT9A2eXvxCdjbS7B81/EWnuUtnvWFEI0V4iUUak0oKy3/6em2EexDBlyqCRx82R1E/HZ1GKxZb0NDiFbbaoLlQgsbnnWrFgzWakMReocRZRzA0NCBE6FzombVMkOVVcev22grWwXD8ba1wkVrYRmiGNkMYCdC51wzziJjUOfA+Dl9jhh1HOdIdU7gtYrN5BdngIuMNR6yZMZaKkZ2mXaD78g66zXwXrPXoNGJYtyEoReH2A4yEyc1FGs7fLAaliFKIjQAYQ16DqAXijBaR7Rp6R+t3iV29Ts2RdgL2Hv7H7C9vXVqtwQrlVEMhmXYwzK9xTLWscy/X1GGVYZkIaO5tkyNvSA+wHYQ3uTyvhCWa+uskNhuspmjDIl0sJMxga4wy50xsk79ajNCIXsCI5uRT6oe2nbMMaPfPl4zzgJj6x/AGH8dXdfV8P2QMX6BbVAP26SCGJsx/8ps+Lq50sMyf8EYEYlM8iQ6x8btETPAC7Kb7/B2s4wgodnqNuqcMSNc93KEy0QYQ7NjbdQA14xF2RQZic6ZY0Zf58wxo98+zh1jS8WY94VwD+2/aLg5ipHtxg7LF3wHdU8U40MQC4dPc7WPzZ9+vkPtX2DfNGMZm9/gfnDQzz/la5yfQmdF72GQkegcnrH+NFeU5qML0FHvUrv9sYLx49uwIxx08SgnY11k5HXOPDKags6ZR0ZRA1wzXjNKGG+DqRmJvXu7REZSua5uUPvtBOzXbGFuoj3CRGP/A/sFN38mMH6G23/B/TCN2SPcnK2dbP6KDL8B0mqgH4B7R/46GyNC3P8q0DQReyfe2G541Ff38SfIxvg1ngbekReXo/o6imV0P4xF/NAth1HRn3PNOIOMZODkHDNaqHPmmdFk33RYVmafMdMohqh6VcFYTL3KiswYWUZpxuiwUZP497//DfYJZA7bSvjx7eZn1P76G0+zj3Y/lvE+2w2P+v0vOE3CV+hbWMZPsMx+cERy2FhrzHu6i3/fuKB257yVpQ+5+f4Nzh4qGO/xu7+f7u5hQ5bO70Ch2QTFXUyKTL8jUxfH5zBGGKd1cZ5pAJzI+KWC8cucjPDefw4CcokxRo7PmS9G+diVa8YZZ5zz5zEwXN6vV+G71sV5u/KMTWRsn19AoYV6VRyj6+wOG7CMAbx7XZ3huJADPiG1ovtVZPxI8f74UTpGoSwHWMazKyg0LLDQGEYywjirJaZ3ztgYlhpnK4pkaiKjoh8gHWNTLAyOuzrDwxvwnDUUjP5YsrM6G6fDnzfldSyWkS9KK8S4KGGUjJfzr+MsM0asbSGO7Zxhxo4TsbbFfDEGxq/ONaPkOg5hbRs2Zp61HStsdDzaVOtVnw7HArK2Aw8fwBo+wyido1mmSZYoGjVg0ODgIbU/N7ENEU4f0U42H13QoxdTMi7SoyL7kHeEHxr7ijf/hEIOoMiNEQEwTStqbQs2j/IY20l2PU/qPCNaRAIA1k++lJJxKb6f/ECIjmViU10G2C6SlN+YYj52bYtZZ0wy3+qacQYZJXPnZ5/RUOZ8HmEjE2Lkq7YpMWIZREZs2kd89uqotS0cbDvGjHzboWRcLpcxeB17Y0ZsOxw9PB9ZYHT8iZK228VBoFd4HkyqxubpRDG+hx+Ghe/IEeZ/R8bd31MwYhnY/I4rHKfadW2//CnmzjsswTF7tz6sAKM4T2eDpU92MuV8nk1GWZ6HyBUhbK07Q4xdLdvaFrPFmG1e+T+CEdsQkRGr72hGztSMnKVlxDYjljEmR9AI5p71O3Qq2t1XJzg3TcH4/Xucfadg/I7f/XsFI5bh5BUUqoNlHGVc24IkciYm5gdox96r/ufOhF9qE+6OjG0sg58fANpy28y5toWY50HBWI4JjDF5VzKtbTETjHlzBM0FY3w+qxlgjM9npV7bwq40o13I2hah3DL4yW7CjCtyxpLy58BokZ1y8wKI5sWjNiHGUqYOJrRmFsYYnYOeU2lGJ0EuxAx5ySrFqBWztkW1GbVC1raYCcaCdc5sMsavbSG+d1SBkXvvyL+2hdvfgLxkZ5gSbKqMWIYzyEu20XcLWdvCOsLf7hD7kqfKiH3HrB/giMuFmFkDmD5jvTKMfl/HkVmIzpl9RrXOsSrNaCXQOerUzlqlGTV1Wuoka1v0K8zY5y9h5pzPAuPhVBkPpYy5dQ5jZLlmpsrIcsmkZgzkfJboHMbIxltNEZGNQWqtiIz51rbw65wqMgbqnEhLsLaFVWnGiJzPWTVAJRkL1jkzy5hC51SSManOiZAJbGaiX6+iTZNxgRUiWK8SQukqF8q1LZx94RtrzrQvhdoelol9Y40d8xCtAULjOirJmHjsyj+BUbq2xRwwKte2sMVxHVVm7NrZ1raYKcaMa1vMHmOO8TmrsBB5SkYxW7PCUjLCsuaricbn6OO1LfwPBHivsunsmA/7TkrGlXSWkvEOFIrNt9mPY4zuQx4z0tthMS1jjV+xQWEpFeLeHSjUmDGmDzlG55zmZUxl6XoXRMbTjDpnJhlT6px5ZdTnijG0toXgWXY+RnGGW2RlUwyjbbn+IB3fC69tIb4jZ6xX19FY4YXM08xYTybbjR2WjXE/7h05RgNkZDwQCo892+JiTuLsHzwq4cgmGWMWnZOVUXjQEjKiTYBRqnNmnVE2BBnnPswWo3QIMowJLF7nTIVxwjqHZwzNcAsxtgplnIjOaR54pW6R/yBzvzjDzWfEERSwW6tN2lHvyINk7eSEGde3OLts4Yx7zKB5cgb2ZsDbG9yOe73GWfAt/mxbEe1lKsbIuQ+OmZDxUlidiS2lIVw3nMXn25Xwd3aY8Fp5mZDRlFY3MPchv865FFYSi2DEXglmfg+KyMhXQUkZS9Y5lWEsUefMHKM2j4wxczyzMUbVOWUzxszxTKJzWL+ctOlqXtbanGEmFJERVt+mGbWkK4Ozw/iT1dbl7aXYL5dV5+xDqunGEFJ+/SjmJ3sK9uJTsDePwR6gQZ7qzuIoaMfEuC2LuB87DM/yBs/6AqOI+ch+hEING5BEu6jvVmJKMBwOdA4ZMxdfChcG781nNq5IjNlQBM9+hveucPRLOOvFOY45EoNzT8BSYd/mhHxILAURS9E3FEqJD94zM9TBEqznTGRcFI4esmSFGEWo2HhGxbc5srYFTTNDkujAT4yeVRijQ87n0iCaEK4wRosEcUmQcThd11Q6R/ymk4lx+Rn3/Ie9Z8tFMHYz6pwCGSU9gixwcYxZdE48Y2s+GAeQIfIunk9oB/EdqsdSZoqMmCBzScG4hGkoQ4yYPBSjiMFxt7sQZKBk1P2gus/oeabjkCxfRh8XN/3hntS+hS+Bqx3Yq0NSg5HyG+TgXVrf6XxQLhwE2aV/IEnR2GnwrN9CEDH2D7jeap9G8aour5JhjK4QTqpzsOKJmqcTYR1MRWQgAGaW1sPCgwsXaLTIfgYmYYpawBiNn6ejB+ZbZRuHnJJxN2bQbLh9FMOpFqKWMhY/3+qasfqM4aAlMEqHPJXImGBsZ1JGKFzjOO75j6h4/HD6cUrGJHN14y8hnXPdx3Uh4qPeGMJeg2NHMWg2bqq+czyA04itrWi4rkO/mHnl8FfXZGlY6AxgiYfjXU1HFTQ2HYFjYjh5EN9jw2uNYhjpeekq9dQzyYGm71k0piRUNsZwYD6c6YeLDJyLURp0wozjcIkZ/w/3jti7avfz2QAAAABJRU5ErkJggg==")
   cherries.push(cherry)
+}
+
+var walls = []
+
+for (var i = 0; i < 10; i = i + 1) {
+  var wall = makeBox(getRandomColor(), 615, getRandomNumberBetween(0, canvasHeight), 25, 50, getRandomNumberBetween(1, 4))
+  // wall.showImage("http://www.videogamesprites.net/ChronoTrigger/Objects/Objects/Red%20Star%20-%20Falling.gif")
+  walls.push(wall)
 }
 
 // Warning!!
@@ -56,7 +69,8 @@ function gameLoop(time) {
   window.requestAnimationFrame(gameLoop)
 
   // Clear the canvas so we can drawing all over again
-  fillBackground(backgroundColor)
+  // fillBackground(backgroundColor)
+  backgroundBox.draw()
 
   // If a button is pressed, move the player up
   if (buttonPressed == true) {
@@ -65,24 +79,28 @@ function gameLoop(time) {
     player.y = player.y + player.speed
   }
 
-  // Move the wall
-  wall.x = wall.x - wall.speed
+  for (var i = 0; i < walls.length; i = i + 1) {
+    var wall = walls[i]
 
-  // If the wall is off the left side of the screen,
-  // move it to the right side of the screen to start over
-  if (wall.x < -wall.width) {
-    wall.x = canvasWidth
-    wall.y = getRandomNumberBetween(0, canvasHeight)
-  }
+    // Move the wall
+    wall.x = wall.x - wall.speed
 
-  if (gameOver == true) {
-    // Reset the wall and cherry to their starting positions if game is over
-    wall.x = canvasWidth
-    player.height = initialPlayerHeight
-    player.speed = initialPlayerSpeed
-  } else {
-    // Draw the wall and cherry
-    wall.draw()
+    // If the wall is off the left side of the screen,
+    // move it to the right side of the screen to start over
+    if (wall.x < -wall.width) {
+      wall.x = canvasWidth
+      wall.y = getRandomNumberBetween(0, canvasHeight)
+    }
+
+    if (gameOver == true) {
+      // Reset the wall and cherry to their starting positions if game is over
+      wall.x = canvasWidth
+      player.height = initialPlayerHeight
+      player.speed = initialPlayerSpeed
+    } else {
+      // Draw the wall and cherry
+      wall.draw()
+    }
   }
 
   for (var i = 0; i < cherries.length; i = i + 1) {
@@ -99,15 +117,15 @@ function gameLoop(time) {
 
     // If the player has hit a wall
     if (player.overlaps(wall) == true) {
-      gameOver = true
+      // gameOver = true
     }
 
     // If the player has hit a cherry
     if (player.overlaps(cherry) == true) {
       cherry.hide()
       score = score + 1
-      player.height = player.height + 10
-      // player.speed = player.speed + 1
+      // player.height = player.height + 10
+      player.speed = player.speed + 0.25
     }
 
     if (gameOver == true) {
@@ -121,7 +139,7 @@ function gameLoop(time) {
 
   // Game over if the player hits the top or the bottom
   if ( player.y < 0 || (player.y + player.height) > canvasHeight) {
-    gameOver = true
+    // gameOver = true
   }
 
   if (gameOver == true) {
