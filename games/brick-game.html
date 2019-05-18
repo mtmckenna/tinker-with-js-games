@@ -10,6 +10,8 @@ var gameOverText = "Nice try! Avoid the ceiling, floor, and wall!"
 var textColor = "black"
 var backgroundColor = "white"
 var score = 0
+var initialPlayerHeight = 25
+var initialPlayerSpeed = 2
 
 // The first parameter is the box's color
 // The second parameter is the box's horizontal position
@@ -17,7 +19,7 @@ var score = 0
 // The fourth parameter is the box's width
 // The fifth parameter is the box's height
 // The sixth parameter is the box's speed
-var player = makeBox("blue", 50, 200, 25, 25, 2)
+var player = makeBox("blue", 50, 200, 25, initialPlayerHeight, initialPlayerSpeed)
 var wall = makeBox("red", 615, 200, 25, 75, 3)
 var cherry = makeBox("deeppink", 615, 100, 25, 25, 5)
 
@@ -82,12 +84,16 @@ function gameLoop(time) {
   if (player.overlaps(cherry) == true) {
     cherry.hide()
     score = score + 1
+    player.height = player.height + 10
+    // player.speed = player.speed + 1
   }
 
   if (gameOver == true) {
     // Reset the wall and cherry to their starting positions if game is over
     wall.x = canvasWidth
     cherry.x = canvasWidth
+    player.height = initialPlayerHeight
+    player.speed = initialPlayerSpeed
   } else {
     // Draw the wall and cherry
     wall.draw()
